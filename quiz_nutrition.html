@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plateforme de Révision — Nutrition & Diététique</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #1a6b4a;
+    --green-light: #e8f5ee;
+    --green-mid: #2d9e6b;
+    --red: #c0392b;
+    --red-light: #fdecea;
+    --amber: #b7600e;
+    --amber-light: #fdf3e7;
+    --blue: #1a5276;
+    --blue-light: #e8f0f8;
+    --text: #1a1a2e;
+    --text-muted: #6b7280;
+    --border: #e5e7eb;
+    --bg: #f8f7f2;
+    --white: #ffffff;
+    --card-shadow: 0 2px 16px rgba(0,0,0,0.06);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  .site-header {
+    background: var(--green);
+    padding: 2rem 2rem 3rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .site-header::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+  }
+  .site-header::after {
+    content: '';
+    position: absolute;
+    bottom: -60px; left: 40%;
+    width: 280px; height: 280px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+  }
+  .header-inner { max-width: 760px; margin: 0 auto; position: relative; z-index: 1; }
+  .header-tag {
+    display: inline-block;
+    background: rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.9);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+  }
+  .site-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 500;
+    color: #ffffff;
+    line-height: 1.2;
+    margin-bottom: 6px;
+  }
+  .site-header p { color: rgba(255,255,255,0.75); font-size: 15px; font-weight: 300; }
+
+  /* PROGRESS */
+  .progress-wrap {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: 1rem 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .progress-inner { max-width: 760px; margin: 0 auto; }
+  .progress-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .progress-meta span { font-size: 13px; color: var(--text-muted); font-weight: 400; }
+  .progress-meta strong { color: var(--text); font-weight: 500; }
+  .bar-track {
+    height: 6px;
+    background: #eee;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--green-mid), var(--green));
+    border-radius: 6px;
+    transition: width 0.4s cubic-bezier(.4,0,.2,1);
+  }
+
+  /* MAIN */
+  .main { max-width: 760px; margin: 0 auto; padding: 2rem; }
+
+  /* QUESTION CARD */
+  .question-card {
+    background: var(--white);
+    border-radius: 16px;
+    box-shadow: var(--card-shadow);
+    padding: 2rem;
+    margin-bottom: 1.25rem;
+    animation: fadeUp 0.3s ease;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .module-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-bottom: 14px;
+  }
+  .tag-m1 { background: var(--blue-light); color: var(--blue); }
+  .tag-m2 { background: #f0edf8; color: #6941a8; }
+  .tag-m3 { background: var(--amber-light); color: var(--amber); }
+
+  .question-number {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+    font-weight: 400;
+  }
+  .question-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 19px;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.5;
+    margin-bottom: 1.5rem;
+  }
+
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .opt-btn {
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 18px;
+    text-align: left;
+    cursor: pointer;
+    font-size: 15px;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text);
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    line-height: 1.4;
+  }
+  .opt-btn:hover:not(:disabled) {
+    border-color: var(--green-mid);
+    background: var(--green-light);
+  }
+  .opt-btn .opt-letter {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 500;
+    flex-shrink: 0;
+    color: var(--text-muted);
+    transition: all 0.15s;
+  }
+  .opt-btn.correct-ans {
+    background: var(--green-light);
+    border-color: var(--green);
+    color: var(--green);
+  }
+  .opt-btn.correct-ans .opt-letter {
+    background: var(--green);
+    border-color: var(--green);
+    color: white;
+  }
+  .opt-btn.wrong-ans {
+    background: var(--red-light);
+    border-color: var(--red);
+    color: var(--red);
+  }
+  .opt-btn.wrong-ans .opt-letter {
+    background: var(--red);
+    border-color: var(--red);
+    color: white;
+  }
+  .opt-btn:disabled { cursor: default; }
+
+  /* FEEDBACK */
+  .feedback {
+    margin-top: 1.25rem;
+    padding: 14px 18px;
+    border-radius: 10px;
+    font-size: 14px;
+    line-height: 1.6;
+    border-left: 4px solid;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .feedback.correct { background: var(--green-light); border-color: var(--green); color: #0d4a2e; }
+  .feedback.wrong { background: var(--red-light); border-color: var(--red); color: #7b1b13; }
+  .feedback-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+
+  /* NAVIGATION */
+  .nav-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .btn {
+    font-family: 'DM Sans', sans-serif;
+    border-radius: 10px;
+    padding: 11px 22px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    border: 1.5px solid var(--border);
+    background: var(--white);
+    color: var(--text);
+  }
+  .btn:hover { background: var(--bg); }
+  .btn:disabled { opacity: 0.35; cursor: default; }
+  .btn-primary {
+    background: var(--green);
+    color: white;
+    border-color: var(--green);
+  }
+  .btn-primary:hover { background: var(--green-mid); border-color: var(--green-mid); }
+
+  /* DOT NAV */
+  .dot-nav {
+    background: var(--white);
+    border-radius: 16px;
+    box-shadow: var(--card-shadow);
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.25rem;
+  }
+  .dot-nav-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 500;
+  }
+  .dots { display: flex; flex-wrap: wrap; gap: 6px; }
+  .dot {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    border: 1.5px solid var(--border);
+    background: var(--bg);
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .dot:hover { border-color: var(--green-mid); color: var(--green); }
+  .dot.current { border-color: var(--green); background: var(--green-light); color: var(--green); }
+  .dot.good { background: var(--green); border-color: var(--green); color: white; }
+  .dot.bad { background: var(--red); border-color: var(--red); color: white; }
+
+  /* SCORE SCREEN */
+  .score-screen { animation: fadeUp 0.4s ease; }
+  .score-hero {
+    background: var(--white);
+    border-radius: 16px;
+    box-shadow: var(--card-shadow);
+    padding: 2.5rem 2rem;
+    text-align: center;
+    margin-bottom: 1.25rem;
+  }
+  .score-ring {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    border: 4px solid;
+  }
+  .score-pct { font-family: 'Playfair Display', serif; font-size: 38px; font-weight: 600; }
+  .score-mention { font-size: 13px; font-weight: 500; margin-top: 2px; }
+  .score-hero h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 500;
+    margin-bottom: 6px;
+  }
+  .score-hero p { color: var(--text-muted); font-size: 14px; }
+
+  .metrics-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 1.25rem; }
+  .metric {
+    background: var(--white);
+    border-radius: 12px;
+    box-shadow: var(--card-shadow);
+    padding: 1.25rem 1rem;
+    text-align: center;
+  }
+  .metric-val { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 600; color: var(--text); }
+  .metric-lbl { font-size: 12px; color: var(--text-muted); margin-top: 4px; font-weight: 400; }
+  .metric-module { font-size: 11px; font-weight: 500; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); }
+
+  /* CORRECTION */
+  .correction-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 500;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1.5px solid var(--border);
+  }
+  .correction-item {
+    background: var(--white);
+    border-radius: 12px;
+    box-shadow: var(--card-shadow);
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 10px;
+  }
+  .corr-q {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 8px;
+    line-height: 1.5;
+  }
+  .corr-ans {
+    font-size: 13px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .corr-ans.correct { background: var(--green-light); color: var(--green); }
+  .corr-ans.wrong { background: var(--red-light); color: var(--red); }
+  .corr-ans.right-answer { background: var(--green-light); color: var(--green); }
+  .corr-expl {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 8px;
+    line-height: 1.6;
+    padding-top: 8px;
+    border-top: 1px solid var(--border);
+  }
+
+  .score-actions { display: flex; gap: 10px; justify-content: center; margin-top: 1.5rem; flex-wrap: wrap; }
+
+  @media (max-width: 600px) {
+    .main { padding: 1rem; }
+    .site-header { padding: 1.5rem 1rem 2rem; }
+    .site-header h1 { font-size: 24px; }
+    .metrics-row { grid-template-columns: 1fr 1fr; }
+    .progress-wrap { padding: 0.75rem 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-tag">Delta-Book · Formation Pleine-Santé</div>
+    <h1>Nutrition &amp; Diététique</h1>
+    <p>Testez vos connaissances — Modules 1, 2 &amp; 3</p>
+  </div>
+</header>
+
+<div class="progress-wrap">
+  <div class="progress-inner">
+    <div class="progress-meta">
+      <span>Question <strong id="qnum">1</strong> sur <strong>20</strong></span>
+      <span id="answered-count">0 répondues</span>
+    </div>
+    <div class="bar-track"><div class="bar-fill" id="bar" style="width:0%"></div></div>
+  </div>
+</div>
+
+<main class="main" id="main"></main>
+
+<script>
+const questions = [
+  { module:"Module 1", tag:"tag-m1", text:"Combien de familles d'aliments distingue-t-on en nutrition ?", options:["5 familles","6 familles","7 familles","9 familles"], answer:2, explanation:"On distingue 7 familles : les boissons, les fruits et légumes, les féculents, les protéines, les produits laitiers, les matières grasses, et les aliments plaisir/sucrés." },
+  { module:"Module 1", tag:"tag-m1", text:"Quelle proportion du corps d'un adulte est constituée d'eau ?", options:["Entre 40 et 50 %","Entre 60 et 70 %","Entre 75 et 85 %","Environ 50 %"], answer:1, explanation:"L'eau représente entre 60 et 70 % du poids du corps chez l'adulte, et encore davantage chez l'enfant." },
+  { module:"Module 1", tag:"tag-m1", text:"Quelle quantité d'eau recommande-t-on pour un adulte de 60 kg ?", options:["1 litre par jour","1,5 à 1,8 litre par jour","2,5 litres par jour","3 litres par jour"], answer:1, explanation:"La recommandation est de 30 ml par kg de poids corporel, soit 1,8 L pour 60 kg. En pratique, au moins 1,5 L par jour." },
+  { module:"Module 1", tag:"tag-m1", text:"Combien d'acides aminés essentiels l'organisme ne peut-il pas fabriquer ?", options:["5","7","9","11"], answer:2, explanation:"Il existe 20 acides aminés dont 9 sont essentiels (valine, leucine, isoleucine, lysine, histidine, phénylalanine, tryptophane, thréonine, méthionine)." },
+  { module:"Module 1", tag:"tag-m1", text:"Quelle est la protéine de référence la mieux assimilée par l'organisme ?", options:["La viande de bœuf","Le blanc d'œuf","Le lait de vache","Le soja"], answer:1, explanation:"La protéine de référence est la protéine de blanc d'œuf : elle contient tous les acides aminés essentiels dans les justes proportions." },
+  { module:"Module 1", tag:"tag-m1", text:"Combien de kcal par gramme apportent les lipides ?", options:["4 kcal/g","7 kcal/g","9 kcal/g","12 kcal/g"], answer:2, explanation:"Les lipides sont les macronutriments les plus énergétiques : ils libèrent 9 kcal par gramme. Les glucides et protéines apportent 4 kcal/g." },
+  { module:"Module 1", tag:"tag-m1", text:"Parmi les graisses suivantes, lesquelles sont les plus dommageables pour la santé ?", options:["Les acides gras saturés","Les acides gras insaturés oméga-3","Les graisses trans industrielles","Les oméga-9"], answer:2, explanation:"Les seules graisses véritablement dommageables sont les graisses trans, transformées chimiquement par l'industrie alimentaire." },
+  { module:"Module 1", tag:"tag-m1", text:"Pour constituer une protéine végétale équivalente à une protéine animale, quelle association est nécessaire ?", options:["50g céréales + 100g légumineuses","100g céréales + 50g légumineuses","200g céréales seules","100g légumineuses seules"], answer:1, explanation:"Pour constituer une protéine végétale équivalente à une protéine animale, une association de 100 g de céréales + 50 g de légumineuses est nécessaire." },
+  { module:"Module 1", tag:"tag-m1", text:"Quelle est la notion correcte pour classer les glucides aujourd'hui ?", options:["Sucres rapides vs sucres lents","Glucides simples vs glucides complexes","Sucres bons vs sucres mauvais","Glucides digestibles vs non digestibles"], answer:1, explanation:"Les termes \"sucres rapides/lents\" sont dépassés. On parle aujourd'hui de glucides simples (chaînes courtes) et glucides complexes (chaînes longues), classés selon leur index glycémique." },
+  { module:"Module 1", tag:"tag-m1", text:"Quelle part de nos besoins énergétiques les glucides couvrent-ils ?", options:["30 à 35 %","40 à 45 %","50 à 55 %","60 à 70 %"], answer:2, explanation:"Les glucides constituent le socle de notre alimentation et couvrent entre 50 à 55 % de nos besoins énergétiques." },
+  { module:"Module 2", tag:"tag-m2", text:"Comment se répartit l'assiette santé ?", options:["1/3 légumes, 1/3 féculents, 1/3 protéines","1/2 légumes & fruits, 1/4 féculents, 1/4 protéines","1/2 protéines, 1/4 légumes, 1/4 féculents","1/4 légumes, 1/2 féculents, 1/4 protéines"], answer:1, explanation:"L'assiette santé : 1/2 légumes et fruits, 1/4 féculents, 1/4 protéines et produits laitiers, + 10-15g de matières grasses et un verre d'eau." },
+  { module:"Module 2", tag:"tag-m2", text:"À quelle fréquence maximum recommande-t-on de consommer la viande rouge ?", options:["1 fois par semaine","2 fois par semaine","3 fois par semaine","1 fois par jour"], answer:1, explanation:"La viande rouge (bœuf, agneau, mouton, cheval, taureau) doit être limitée à 2 fois maximum par semaine. On privilégie la viande blanche et le poisson." },
+  { module:"Module 2", tag:"tag-m2", text:"Quelle est la portion quotidienne recommandée de fromage ?", options:["10 g par repas","30 g par repas","50 g par repas","100 g par repas"], answer:1, explanation:"La portion quotidienne de fromage est d'environ 30 g (équivalent de deux doigts ou un pouce)." },
+  { module:"Module 2", tag:"tag-m2", text:"Qu'est-ce que l'index glycémique (IG) mesure ?", options:["La quantité de sucre dans un aliment","La vitesse de digestion et d'assimilation du glucose","Le nombre de calories d'un aliment","La teneur en fibres d'un aliment"], answer:1, explanation:"L'IG correspond à la vitesse de digestion et d'assimilation du glucose dans l'organisme. Tous les glucides n'augmentent pas la glycémie de façon équivalente." },
+  { module:"Module 2", tag:"tag-m2", text:"Pour qui le fait de peser systématiquement les aliments est-il justifié ?", options:["Pour tout le monde","Pour les personnes voulant perdre du poids","Pour les cas de dénutrition, athlètes et objectifs de performance","Pour les personnes de plus de 50 ans"], answer:2, explanation:"Peser les aliments n'a de sens que pour les cas de dénutrition, les athlètes de haut niveau et les personnes ayant des objectifs de performances physiques. Cela peut sinon entraîner l'orthorexie." },
+  { module:"Module 3", tag:"tag-m3", text:"Quelle formule permet de calculer l'IMC ?", options:["Poids (kg) ÷ Taille (cm)","Poids (kg) ÷ Taille² (m²)","Poids (kg) × Taille (m)","Taille (m) ÷ Poids (kg)"], answer:1, explanation:"L'IMC (Indice de Masse Corporelle) = Poids en kg divisé par le carré de la taille en mètres (kg/m²)." },
+  { module:"Module 3", tag:"tag-m3", text:"Que représente le métabolisme de base ?", options:["L'énergie dépensée lors d'un effort physique","L'énergie minimale nécessaire aux fonctions vitales au repos","Les calories brûlées lors de la digestion","L'énergie totale dépensée dans la journée"], answer:1, explanation:"Le métabolisme de base est l'énergie minimale nécessaire au maintien des fonctions vitales de l'organisme au repos (respiration, circulation, thermorégulation...)." },
+  { module:"Module 3", tag:"tag-m3", text:"Les régimes minceur très restrictifs sont-ils durables ?", options:["Oui, si suivi par un médecin","Non, ils entraînent souvent l'effet yo-yo","Oui, si pratiqués moins de 3 mois","Oui, pour les personnes obèses uniquement"], answer:1, explanation:"Les régimes minceur ne sont jamais durables. Ils entraînent généralement l'effet yo-yo car trop restrictifs, sans réel changement des habitudes alimentaires." },
+  { module:"Module 3", tag:"tag-m3", text:"Quelle proportion d'aliments alcalinisants est recommandée dans un repas équilibré ?", options:["30 %","50 %","70 %","90 %"], answer:2, explanation:"Il est recommandé d'avoir 70 % d'aliments alcalinisants (basifiants) dans un repas équilibré, pour maintenir l'équilibre acido-basique de l'organisme." },
+  { module:"Module 3", tag:"tag-m3", text:"Quelle est la recommandation concernant la consommation de poisson gras ?", options:["1 fois par mois","1 fois par semaine","Au minimum 1 à 2 fois par semaine","3 fois par semaine minimum"], answer:2, explanation:"Il est conseillé de consommer du poisson gras (maquereau, hareng, saumon, sardine) au minimum une à deux fois par semaine pour l'apport en oméga-3." }
+];
+
+const LETTERS = ['A','B','C','D'];
+let current = 0;
+let answers = new Array(questions.length).fill(null);
+let answered = new Array(questions.length).fill(false);
+let screen = 'quiz';
+
+function updateProgress() {
+  const done = answered.filter(Boolean).length;
+  const pct = Math.round((current / questions.length) * 100);
+  document.getElementById('bar').style.width = pct + '%';
+  document.getElementById('qnum').textContent = current + 1;
+  document.getElementById('answered-count').textContent = done + ' répondue' + (done > 1 ? 's' : '');
+}
+
+function renderQuiz() {
+  const q = questions[current];
+  const isAnswered = answered[current];
+  const correct = answers[current] === q.answer;
+  const allDone = answered.every(Boolean);
+
+  const optionsHtml = q.options.map((opt, i) => {
+    let cls = 'opt-btn';
+    if (isAnswered) {
+      if (i === q.answer) cls += ' correct-ans';
+      else if (answers[current] === i) cls += ' wrong-ans';
+    }
+    return `<button class="${cls}" onclick="selectAnswer(${i})" ${isAnswered ? 'disabled' : ''}>
+      <span class="opt-letter">${LETTERS[i]}</span>
+      <span>${opt}</span>
+    </button>`;
+  }).join('');
+
+  const feedbackHtml = isAnswered ? `
+    <div class="feedback ${correct ? 'correct' : 'wrong'}">
+      <span class="feedback-icon">${correct ? '✓' : '✗'}</span>
+      <span><strong>${correct ? 'Bonne réponse !' : 'Mauvaise réponse.'}</strong> ${q.explanation}</span>
+    </div>` : '';
+
+  const dotsHtml = questions.map((_, i) => {
+    let cls = 'dot';
+    if (i === current) cls += ' current';
+    else if (answered[i]) cls += answers[i] === questions[i].answer ? ' good' : ' bad';
+    return `<button class="${cls}" onclick="goTo(${i})">${i + 1}</button>`;
+  }).join('');
+
+  document.getElementById('main').innerHTML = `
+    <div class="dot-nav">
+      <div class="dot-nav-label">Navigation rapide</div>
+      <div class="dots">${dotsHtml}</div>
+    </div>
+    <div class="question-card">
+      <div>
+        <div class="module-tag ${q.tag}">${q.module}</div>
+        <div class="question-number">Question ${current + 1} / ${questions.length}</div>
+        <div class="question-text">${q.text}</div>
+      </div>
+      <div class="options">${optionsHtml}</div>
+      ${feedbackHtml}
+    </div>
+    <div class="nav-row">
+      <button class="btn" onclick="goTo(${current - 1})" ${current === 0 ? 'disabled' : ''}>← Précédent</button>
+      <div style="display:flex;gap:10px;">
+        ${current < questions.length - 1 ? `<button class="btn" onclick="goTo(${current + 1})">Suivant →</button>` : ''}
+        ${allDone ? `<button class="btn btn-primary" onclick="showScore()">Voir mon score ✓</button>` : ''}
+      </div>
+    </div>
+  `;
+  updateProgress();
+}
+
+function renderScore() {
+  const score = answers.filter((a, i) => a === questions[i].answer).length;
+  const pct = Math.round(score / questions.length * 100);
+
+  let mention, ringColor, ringBg;
+  if (pct >= 80) { mention = 'Excellent !'; ringColor = '#1a6b4a'; ringBg = '#e8f5ee'; }
+  else if (pct >= 60) { mention = 'Bien !'; ringColor = '#1a5276'; ringBg = '#e8f0f8'; }
+  else if (pct >= 40) { mention = 'À revoir'; ringColor = '#b7600e'; ringBg = '#fdf3e7'; }
+  else { mention = 'À reprendre'; ringColor = '#c0392b'; ringBg = '#fdecea'; }
+
+  const byModule = {};
+  questions.forEach((q, i) => {
+    if (!byModule[q.module]) byModule[q.module] = { correct: 0, total: 0, tag: q.tag };
+    byModule[q.module].total++;
+    if (answers[i] === q.answer) byModule[q.module].correct++;
+  });
+
+  const metricsHtml = Object.entries(byModule).map(([mod, s]) => {
+    const p = Math.round(s.correct / s.total * 100);
+    return `<div class="metric">
+      <div class="module-tag ${s.tag}" style="margin-bottom:8px;">${mod}</div>
+      <div class="metric-val">${p}%</div>
+      <div class="metric-lbl">${s.correct}/${s.total} correctes</div>
+    </div>`;
+  }).join('');
+
+  const correctionHtml = questions.map((q, i) => {
+    const isOk = answers[i] === q.answer;
+    const userAns = answers[i] !== null ? `${LETTERS[answers[i]]}. ${q.options[answers[i]]}` : 'Non répondue';
+    return `<div class="correction-item">
+      <div style="margin-bottom:8px;"><span class="module-tag ${q.tag}">${q.module}</span></div>
+      <div class="corr-q">${i + 1}. ${q.text}</div>
+      <div class="corr-ans ${isOk ? 'correct' : 'wrong'}">
+        ${isOk ? '✓' : '✗'} Votre réponse : <strong>${userAns}</strong>
+      </div>
+      ${!isOk ? `<div class="corr-ans right-answer">✓ Bonne réponse : <strong>${LETTERS[q.answer]}. ${q.options[q.answer]}</strong></div>` : ''}
+      <div class="corr-expl">${q.explanation}</div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('main').innerHTML = `
+    <div class="score-screen">
+      <div class="score-hero">
+        <div class="score-ring" style="background:${ringBg};border-color:${ringColor};">
+          <div class="score-pct" style="color:${ringColor};">${pct}%</div>
+          <div class="score-mention" style="color:${ringColor};">${mention}</div>
+        </div>
+        <h2>${score} / ${questions.length} bonnes réponses</h2>
+        <p>Résultats par module :</p>
+        <div class="metrics-row" style="margin-top:1.25rem;">${metricsHtml}</div>
+        <div class="score-actions">
+          <button class="btn" onclick="restart()">← Recommencer</button>
+          <button class="btn btn-primary" onclick="scrollToCorrection()">Voir la correction ↓</button>
+        </div>
+      </div>
+      <div id="correction-section">
+        <p class="correction-title">Correction détaillée</p>
+        ${correctionHtml}
+      </div>
+      <div style="text-align:center;margin-top:1.5rem;padding-bottom:2rem;">
+        <button class="btn btn-primary" onclick="restart()">Recommencer le quiz</button>
+      </div>
+    </div>
+  `;
+  document.getElementById('bar').style.width = '100%';
+  document.getElementById('qnum').textContent = questions.length;
+  document.getElementById('answered-count').textContent = questions.length + ' répondues';
+}
+
+function selectAnswer(i) {
+  if (answered[current]) return;
+  answers[current] = i;
+  answered[current] = true;
+  renderQuiz();
+}
+
+function goTo(i) {
+  if (i < 0 || i >= questions.length) return;
+  current = i;
+  renderQuiz();
+}
+
+function showScore() {
+  screen = 'score';
+  renderScore();
+}
+
+function restart() {
+  current = 0;
+  answers = new Array(questions.length).fill(null);
+  answered = new Array(questions.length).fill(false);
+  screen = 'quiz';
+  renderQuiz();
+}
+
+function scrollToCorrection() {
+  document.getElementById('correction-section').scrollIntoView({ behavior: 'smooth' });
+}
+
+renderQuiz();
+</script>
+</body>
+</html>
